@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fa">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نقشه ایران با ساعت تهران</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        #map {
+            height: 500px;
+            width: 80%;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>نقشه ایران با ساعت تهران</h2>
+    <div id="clock">در حال بارگیری ساعت...</div>
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            var iran = { lat: 32.4279, lng: 53.6880 }; // مختصات مرکز ایران
+            var tehran = { lat: 35.6892, lng: 51.3890 }; // مختصات تهران
+
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 6, // میزان زوم روی کشور ایران
+                center: iran, // موقعیت مرکزی نقشه
+            });
+
+            var marker = new google.maps.Marker({
+                position: tehran,
+                map: map,
+                title: "تهران، ایران"
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+                content: "<b>تهران، ایران</b><br><span id='tehran-time'></span>"
+            });
+
+            marker.addListener("click", function () {
+                infoWindow.open(map, marker);
+            });
+
+            updateClock();
+            setInterval(updateClock, 1000); // هر ثانیه بروزرسانی شود
+        }
+
+        function updateClock() {
+            var now = new Date();
+            var options = { timeZone: "Asia/Tehran", hour: "2-digit", minute: "2-digit", second: "2-digit" };
+            var timeInTehran = now.toLocaleTimeString("fa-IR", options);
+
+            document.getElementById("clock").innerHTML = "⏰ ساعت تهران: " + timeInTehran;
+            var tehranTimeElem = document.getElementById("tehran-time");
+            if (tehranTimeElem) {
+                tehranTimeElem.innerHTML = timeInTehran;
+            }
+        }
+
+        window.onload = initMap;
+    </script>
+
+</body>
+
+</html>
